@@ -37,7 +37,7 @@ git config --list # 列出所有git能找到的配置信息
 git config <key> # 检查某一项配置，如：git config user.name
 ```
 
-## 2. git仓库建立以及基本操作
+## 2. git本地仓库建立以及基本操作
 
 有两种取得 Git 项目仓库的方法
 
@@ -157,6 +157,8 @@ git checkout -- <file>
 ```python
 git branch test # 创建分支test，但是不会将我们带入分支
 git checkout test # 使用checkout命令来切换分支
+
+git checkout -b test # 创建分支 test 并切换到 test 分支，相当于上面两个命令
 # 或者使用switch来切换分支
 git switch test
 # 查看分支信息
@@ -229,7 +231,11 @@ git remote rm origin
 
 ### 4.2 远程->本地仓库
 
-克隆远程库：
+第一步：
+
+创建Repository，得到 Repository 的 SSH 地址。
+
+第二步：克隆远程库
 
 在 GitHub 中找到 Repository 的地址，然后使用如下命令：
 
@@ -252,8 +258,10 @@ git pull origin # 当前分支自动与origin库中唯一一个追踪分支合�
 
 git pull origin main # 远程的main分支与当前分支合并
 
-git pull origin main-branch # 远程main分支与 test-branch 分支合并
+git pull origin main:test # 远程main分支与 test 分支合并
 ```
+
+然后，就可以开始在本地开发了。
 
 ## 5. GitHub的SSH配置
 
@@ -264,7 +272,7 @@ git pull origin main-branch # 远程main分支与 test-branch 分支合并
 ```python
 # 生成ssh文件
 
-ssh-keygen -t rsa -C "<你的邮箱>或者其他备注"
+ssh-keygen -t rsa -b 4096 -C "<你的邮箱>或者其他备注"
 
 # 提示Enter passphrase的时候，直接回车键，可以不用输入密码。
 ```
@@ -282,6 +290,108 @@ ssh -T git@github.com
 如果出现下面的内容，则表示成功：
 
 Hi xxx! You’ve successfully authenticated, but GitHub does not provide shell access.
+
+## 6. git一般的协作工作流程
+
+在日常开发中，通常会遵循一定的工作流程来确保代码的稳定性和团队协作的效率。以下是一个常见的基于 `main` 和 `dev` 分支的工作流程，适用于大多数开发团队：
+
+### 工作流程概述
+
+1. **从远程仓库获取最新代码**
+2. **创建新的功能分支**
+3. **在功能分支上进行开发**
+4. **提交并推送功能分支**
+5. **创建 Pull Request（或者直接合并）**
+6. **代码审查和合并**
+7. **更新本地分支**
+
+### 详细步骤
+
+#### 1. 从远程仓库获取最新代码
+
+首先，确保你的本地 `main` 和 `dev` 分支都是最新的：
+
+```sh
+git checkout main
+git pull origin main
+
+git checkout dev
+git pull origin dev
+```
+
+#### 2. 创建新的功能分支
+
+从 `dev` 分支创建一个新的功能分支。功能分支名称通常基于你正在开发的功能或修复的内容。
+
+```sh
+git checkout dev
+git checkout -b feature/my-new-feature
+```
+
+#### 3. 在功能分支上进行开发
+
+在新的功能分支上进行开发，添加和提交你的更改：
+
+```sh
+# 编辑代码文件
+git add .
+git commit -m "描述你的更改"
+```
+
+开发过程中可以多次提交，确保每个逻辑单元独立提交。
+
+#### 4. 提交并推送功能分支
+
+将功能分支推送到远程仓库，以便其他团队成员可以查看和审查：
+
+```sh
+git push origin feature/my-new-feature
+```
+
+#### 5. 创建 Pull Request（或者直接合并）
+
+在支持 Pull Request 的平台（如 GitHub、GitLab、Bitbucket 等）上，创建一个从 `feature/my-new-feature` 到 `dev` 分支的 Pull Request。描述你的更改并请求代码审查。
+
+#### 6. 代码审查和合并
+
+团队成员会对 Pull Request 进行审查，提出修改建议。所有问题解决后，合并 Pull Request。这一步通常由项目维护者或有权限的开发人员完成。合并后删除远程的功能分支：
+
+```sh
+git branch -d feature/my-new-feature  # 删除本地分支
+git push origin --delete feature/my-new-feature  # 删除远程分支
+```
+
+#### 7. 更新本地分支
+
+合并完成后，确保你的本地 `dev` 和 `main` 分支是最新的：
+
+```sh
+git checkout dev
+git pull origin dev
+
+git checkout main
+git pull origin main
+```
+
+如果 `dev` 分支的更改需要推送到 `main` 分支，可以按照之前提到的合并流程，将 `dev` 分支合并到 `main` 分支：
+
+```sh
+git checkout main
+git merge dev
+git push origin main
+```
+
+通过这个流程，团队可以保持代码库的稳定性，确保所有更改经过审查后才合并到主分支，同时也能灵活地管理多个人同时开发的不同功能。
+
+### 总结
+
+- **从远程仓库获取最新代码**：确保你的 `main` 和 `dev` 分支是最新的。
+- **创建新的功能分支**：基于 `dev` 分支创建一个新的功能分支。
+- **在功能分支上进行开发**：在功能分支上进行开发并提交更改。
+- **提交并推送功能分支**：将功能分支推送到远程仓库。
+- **创建 Pull Request**：请求将功能分支合并到 `dev` 分支。
+- **代码审查和合并**：审查并合并 Pull Request。
+- **更新本地分支**：确保本地 `dev` 和 `main` 分支是最新的，并在需要时合并 `dev` 到 `main`。
 
 ---
 
