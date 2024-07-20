@@ -157,6 +157,8 @@ git checkout -- <file>
 ```python
 git branch test # 创建分支test，但是不会将我们带入分支
 git checkout test # 使用checkout命令来切换分支
+
+git checkout -b test # 创建分支 test 并切换到 test 分支，相当于上面两个命令
 # 或者使用switch来切换分支
 git switch test
 # 查看分支信息
@@ -252,7 +254,7 @@ git pull origin # 当前分支自动与origin库中唯一一个追踪分支合�
 
 git pull origin main # 远程的main分支与当前分支合并
 
-git pull origin main-branch # 远程main分支与 test-branch 分支合并
+git pull origin main:test # 远程main分支与 test 分支合并
 ```
 
 ## 5. GitHub的SSH配置
