@@ -19,7 +19,7 @@ cat /etc/shells
 
 ```bash
 # 查看当前运行的shell
-cho $SHELL
+echo $SHELL
 ```
 
 如果出现 `/bin/zsh` ，则默认终端为zsh。如果不是zsh，则用下面的命令，将默认终端切换为zsh。

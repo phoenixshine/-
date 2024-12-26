@@ -103,15 +103,23 @@ git log --pretty=oneline # 每行显示一条提交日志
 回退到前面的版本
 
 ```python
+# 1. 硬回退
 git reset --hard HEAD^ # 回退到上一个版本
 git reset --hard HEAD~n # 回退到往上 n 个版本
+git reset --hard commit_id # 回退到指定版本
+
+# 注意：HEAD表示当前版本，硬回退当前版本会被直接覆盖。
+# 2. 使用 checkout 回退
+git checkout -b <new - branch - name> commit_id
+# 创建新分支来切换到之前的版本时，当前版本的修改也不会丢失。
+
 ```
 
 其他命令：
 
 ```python
-git reset --hard commit_id # 可以在不同的版本之间穿梭
-git reflog # 可以查看命令历史，以便可以回到未来的某个版本
+git reflog # 可以查看命令历史，以便可以回到未来的某个版本。
+git reset --hard commit_id # 可以在不同的版本之间穿梭，可以在退回之后（包括硬回退），又可以继续往未来的版本进行跳转。
 ```
 
 ### 2.4 工作区和暂存区
