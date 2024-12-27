@@ -67,8 +67,8 @@ git init
 
 ```python
 git add test.txt  # add单个修改的文件
-git add -A  # add所有修改的文件
-git add .  # add所有修改的文件
+git add -A  # add所有修改的文件，不仅会添加当前目录下的文件，还会添加子目录中的文件
+git add .  # add所有修改的文件，不会添加子目录中的文件
 ```
 
 第二步：
@@ -212,7 +212,9 @@ SSH 需要先创建私钥/公钥对，适合管理远程仓库。
 
 git remote add origin <远程库地址> # 添加远程库地址
 
-git push -u origin main # 把本地库的所有内容推送到远程库main分支
+git checkout -b dev origin/dev # 新建 dev 分支，并将远程库的dev分支与本地的dev分支关联起来
+
+git push -u origin main # 把本地库与远程库关联起来，并且，把所有内容推送到远程库main分支
 
 git push origin main # 简化的推送main分支命令
 ```
